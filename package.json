@@ -1,0 +1,19 @@
+{
+  "name": "flashy_cards",
+  "version": "1.0.0",
+  "description": "a flash card exercise with constructor functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robjwatts/flashy_cards.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robjwatts/flashy_cards/issues"
+  },
+  "homepage": "https://github.com/robjwatts/flashy_cards#readme"
+}
