@@ -1,0 +1,2 @@
+{"addFront":"Favorite Food","addBack":"Pizza"}
+{"addFront":"favorite drink","addBack":"coffee","addNext":true}{"addFront":"favorite animal","addBack":"bear","addNext":false}

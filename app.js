@@ -1,74 +1,100 @@
-const inquirer = require('inquirer');
-const fs = require('fs');
+var inquirer = require("inquirer");
+var fs = require("fs");
 
-const cardType = process.argv[2];
-const cardAction = process.argv[3];
+function flashcard(front,back){
+	this.question = front;
+	this.answer = back;
+	this.printfront = function(){
+		console.log(front)
+	};
+	this.printback = function(){
+		console.log(back)
+	};
+	this.flip = function(){
 
-function BasicCard(front, back, topic) {
-	if (!(this instanceof BasicCard)) {
-		return new BasicCard(front, back, topic);
-	}
-
-	this.front = front;
-	this.back = back;
-	this.topic - topic;
+	};
 }
-	fs.appendFile('basic-cards.txt', JSON.stringify(this), (err) =>{
-		if(err) {
-			console.log(err);
+
+//function to enter another flashcard
+function enterNew(){
+	inquirer.prompt([
+
+		{
+		    type: "confirm",
+		    name: "enterNewFlash",
+		    message: "Care to enter a new flash card?"
+	  	}
+
+	]).then(function(user){
+		if(user.enterNewFlash === true){
+			add();
+		} else if (user.enterNewFlash === false){
+			console.log("finished entering")
 		}
 	})
+};
 
-}
+//function to add new flashcards
+function add(){
+	inquirer.prompt([
 
-// if(cardAction === "create") {
-//     let cardName = process.argv[4];
-//     let cardFront = process.argv[5];
-//     let cardBack = process.argv[6];
+		{
+			type: "input",
+			name: "addQuestion",
+			message: "Enter text for the front of this card."
+		},
+		{
+			type: "input",
+			name: "addAnswer",
+			message: "Enter the text for the back of this card."
+		},
 
-// }
+	]).then(function(card){
+		var cardArray = [card.addQuestion, card.addAnswer];
+		var jsonCard = JSON.stringify(cardArray);
+		
+		fs.appendFile("flashcards.txt", jsonCard + ";", function(err) {
+			if (err) {
+			  console.log(err);
+			}
+			else {
+			    console.log("New card added!");
+			}	
+		});
+		enterNew();
+	})
+};
+
+//function to review flashcards
+function review(){
+	console.log("Shuffling...")
+	fs.readFile("flashcards.txt", "utf8", function(err, data) {
+
+	var amtCards = data.split(";");
+	var card = JSON.parse(amtCards[1]);
+	var newCard = new flashcard(card[0],card[1]);
+	console.log(newCard)
 
 
-var cardOne = new BasicCard("Homer", "Simpson", "The Simpsons");
+	});
+};
 
-console.log(cardOne.front);
 
-fs.readFile('basic-cards.txt', (err, data) => {
-	if (err) throw err;
-	var cards = data;
-	console.log(JSON.stringify(cards));
+//initial prompt
+inquirer.prompt([
+	
+	{
+		type: "input",
+		name: "addReview",
+		message: "Add or review flashcards?"
+	}
+
+]).then(function(user){
+
+	if(user.addReview === "add"){
+		add();
+
+	} else if (user.addReview === "review"){
+		review();
+	};
 });
-
-function ClozeCard(text, cloze, topic) {
-	if(!(this instanceof ClozeCard)) {
-		return new ClozeCard(text, cloze);
-	}
-	this.topic = topic;
-	this.text = text;
-	this.cloze = cloze;
-	fs.appendFile('cloze-cards.txt', JSON.stringify(this), (err) =>{
-		if(err) {
-			console.log(err);
-		}
-	})
-}	
-
-ClozeCard.prototype.createPartial = function() {
-	return this.partial = (this.text).replace(this.cloze, " ... ");
-}
-
-ClozeCard.prototype.fulltext = function() {
-	return this.text;
-}
-
-// ClozeCard.prototype.printPartial = (item) =>{
-//     console.log(item.partial);
-// }
-
-var clozeOne = new ClozeCard("hello there we are", "hello");
-
-// clozeOne.printPartial(clozeOne);
-
-console.log(clozeOne.createPartial());
-
-console.log(clozeOne.fulltext());
